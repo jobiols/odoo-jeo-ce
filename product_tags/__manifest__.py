@@ -13,7 +13,8 @@
     "excludes": [],
     "depends": [
         "base",
-        'product'
+        'product',
+        'stock'
     ],
     "data": [
         "security/ir.model.access.csv",

@@ -12,12 +12,12 @@
 #
 source /opt/maintainer-tools/env/bin/activate
 oca-gen-addon-readme \
-	--org-name TecnoproPy \
-	--repo-name odoo-paraguay \
+	--org-name jobiols \
+	--repo-name odoo-jeo-ce \
 	--branch 13.0 \
 	--addons-dir "$PWD" \
 	--gen-html
 
-# pylint {} --load-plugins=pylint_odoo -d all -e odoolint -d C8101
+# pylint {} --load-plugins=pylint_odoo -d C0114,C0115,C0116
 # ejecutar pylint en cada repositorio
-find ./* -type d -exec pylint {} --load-plugins=pylint_odoo -d all -e odoolint -d C8101 \;
+#find ./* -type d -exec pylint {} --load-plugins=pylint_odoo -d C8101 \;

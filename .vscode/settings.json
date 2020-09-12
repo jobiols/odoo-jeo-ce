@@ -1,5 +1,9 @@
 {
     "restructuredtext.confPath": "",
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "python.linting.pylintArgs": [
+        "--load-plugins=pylint_odoo",
+        "-d C0114,C0115,C0116"
+    ]
 }
