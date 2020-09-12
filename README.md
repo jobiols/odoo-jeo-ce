@@ -1,6 +1,7 @@
 
 
 [![Build Status](https://travis-ci.org/jobiols/odoo-jeo-ce.svg?branch=13.0)](https://travis-ci.org/jobiols/odoo-jeo-ce)
+[![codecov](https://codecov.io/gh/jobiols/odoo-jeo-ce/branch/13.0/graph/badge.svg)](https://codecov.io/gh/jobiols/odoo-jeo-ce)
 
 Jeo Software modules for Odoo
 =============================
@@ -19,4 +20,3 @@ Python libraries which we depend from.
 --------------------------------------
 
 See the file requirements.txt
-

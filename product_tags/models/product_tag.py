@@ -3,13 +3,12 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+
 class ProductTag(models.Model):
     _description = 'Product Tags'
     _name = 'product.tag'
     _order = 'name'
-#    _order = 'parent_left, name'
     _parent_store = True
-#    _parent_order = 'name'
 
     name = fields.Char(
         string='Tag Name',
