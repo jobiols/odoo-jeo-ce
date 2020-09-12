@@ -23,6 +23,6 @@
         "demo/product_tags.xml",
     ],
     "application": False,
-    "installable": True,
+    "installable": False,
     "preloadable": False,
 }
