@@ -38,7 +38,7 @@
         'account_payment_group',  # Multiples medios de pago
         'account_check',  # Cartera de cheques
         'l10n_ar_account_withholding',  # Retenciones
-        # 'l10n_ar_stock',  # Remito electrónico Argentino tiene una rara 
+        # 'l10n_ar_stock',  # Remito electrónico Argentino tiene una rara
         # dependencia con l10n_ar_account
 
         # 'l10n_ar_report_stock', # OJO esto instala Stock
