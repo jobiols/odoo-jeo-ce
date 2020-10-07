@@ -33,19 +33,17 @@
         'l10n_ar_bank',  # Bancos Argentinos
         'l10n_ar_afipws',  # Modulo Base para los Web Services de AFIP
         'l10n_ar_afipws_fe',  # Factura electronica Argentina
-        'l10n_ar_reports',  # Reportes FE
         'l10n_ar_ux',  # Mejoras para argentina
+        'l10n_ar_account_withholding',  # Retenciones
+
         'account_payment_group',  # Multiples medios de pago
         'account_check',  # Cartera de cheques
-        'l10n_ar_account_withholding',  # Retenciones
+        'base_currency_inverse_rate',  # TC en Argentino
+
         # 'l10n_ar_stock',  # Remito electrónico Argentino tiene una rara
         # dependencia con l10n_ar_account
-
         # 'l10n_ar_report_stock', # OJO esto instala Stock
-
         # Para mejorar la usabilidad
-        # 'base_currency_inverse_rate',  # TC en Argentino
-        # 'account_ux',  # hace pilas de cosas ver en el modulo
         # 'base_ux',  # mejoras de base
         # 'product_ux',  # mejoras en productos
         # 'sale_ux',  # mejoras en ventas
