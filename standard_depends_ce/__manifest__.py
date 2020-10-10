@@ -33,7 +33,6 @@
         'l10n_ar_bank',  # Bancos Argentinos
         'l10n_ar_afipws',  # Modulo Base para los Web Services de AFIP
         'l10n_ar_afipws_fe',  # Factura electronica Argentina
-        'l10n_ar_reports',  # Reportes FE
         'l10n_ar_ux',  # Mejoras para argentina
         'account_payment_group',  # Multiples medios de pago
         'account_check',  # Cartera de cheques
