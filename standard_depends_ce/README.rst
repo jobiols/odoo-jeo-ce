@@ -13,7 +13,7 @@ STANDARD DEPENDS FOR CE
 =======================
 
 
-Este modulo instala las dependencias standard para localizacion argentina CTMIL
+Este modulo instala las dependencias standard para localizacion argentina ADHOC
 en version comunitaria Debe ponerse en las dependencias del modulo default de
 cada cliente.
 
