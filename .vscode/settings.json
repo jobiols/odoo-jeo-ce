@@ -5,5 +5,9 @@
     "python.linting.pylintArgs": [
         "--load-plugins=pylint_odoo",
         "-d C0114,C0115,C0116"
-    ]
+    ],
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "files.trimTrailingWhitespace": true,
 }
