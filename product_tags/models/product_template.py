@@ -8,7 +8,7 @@ class Product(models.Model):
     _inherit = "product.template"
 
     tag_ids = fields.Many2many(
-        'product.tag',
-        column1='product_id',
-        column2='tag_ids',
-        help='Classify or analyze your products with tags.')
+        "product.tag",
+        column1="product_id",
+        column2="tag_ids",
+        help="Classify or analyze your products with tags.")
