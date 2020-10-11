@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2020 jeo Software
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 
@@ -9,8 +9,13 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name="categ_id"]" position="after">
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Add your tag ..." />
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field 
+                    name="tag_ids" 
+                    widget="many2many_tags" 
+                    options="{'color_field': 'color', 'no_create_edit': True}" 
+                    placeholder="Add your tag ..." 
+                />
             </xpath>
         </field>
     </record>
@@ -21,8 +26,12 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_search_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name="name"]" position="after">
-                <field name="tag_ids" string="Tag" filter_domain="[('tag_ids','ilike', self)]" />
+            <xpath expr="//field[@name='name']" position="after">
+                <field 
+                    name="tag_ids" 
+                    string="Tag" 
+                    filter_domain="[('tag_ids','ilike', self)]" 
+                />
             </xpath>
         </field>
     </record>
@@ -35,7 +44,11 @@
         <field name="arch" type="xml">
             <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="after">
                 <span class="oe_kanban_list_many2many">
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
+                    <field 
+                        name="tag_ids" 
+                        widget="many2many_tags" 
+                        options="{'color_field': 'color'}" 
+                    />
                 </span>
             </xpath>
         </field>
@@ -64,8 +77,7 @@
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Create a new product tag
-            </p>
-            <p>
+            </p><p>
                 Manage products to better classify them.
                 <br />
                 A product may have several tags, besides a tag may have a
@@ -73,5 +85,12 @@
             </p>
         </field>
     </record>
-    <menuitem id="menu_product_category_form" action="action_product_category_form" name="Product Tags" sequence="1" parent="stock.menu_product_in_config_stock" />
+    <!-- menu -->
+    <menuitem 
+        id="menu_product_category_form" 
+        action="action_product_category_form" 
+        name="Product Tags" 
+        sequence="1" 
+        parent="stock.menu_product_in_config_stock" 
+    />
 </odoo>
