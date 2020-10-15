@@ -1,4 +1,4 @@
-# Copyright 2019 jeo Software
+# Copyright 2020 jeo Software
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Module name",
