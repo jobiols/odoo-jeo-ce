@@ -14,5 +14,5 @@
     "data": ["security/ir.model.access.csv", "views/product_view.xml"],
     "demo": ["demo/product_tags.xml"],
     "application": False,
-    "installable": True,
+    "installable": False,
 }

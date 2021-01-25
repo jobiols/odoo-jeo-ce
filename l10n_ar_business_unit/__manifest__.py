@@ -11,7 +11,7 @@
     "maintainers": ["jobiols"],
     "license": "AGPL-3",
     "application": False,
-    "installable": True,
+    "installable": False,
     "depends": [
         "base",
         "account",
