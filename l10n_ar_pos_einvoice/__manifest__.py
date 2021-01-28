@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'POS einvoice AR',
     'version': '0.1',
@@ -15,5 +14,5 @@
     'qweb': [
         'static/src/xml/pos_payment.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
