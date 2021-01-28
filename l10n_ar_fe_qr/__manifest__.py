@@ -16,6 +16,6 @@
         'views/afip_view.xml',
         'views/report_template.xml'
     ],
-    'installable': True,
+    'installable': False,
     'application': True,
 }
