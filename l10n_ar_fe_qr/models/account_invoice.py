@@ -1,6 +1,7 @@
 from odoo import fields, models
 import json
 import base64
+import qrcode
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
@@ -41,8 +42,14 @@ class AccountInvoice(models.Model):
             else:
                 rec.texto_modificado_qr = 'https://www.afip.gob.ar/fe/qr/?ERROR'
 
-            import pyqrcode
-            rec.image_qr = pyqrcode.create(rec.texto_modificado_qr)
+            _qr = qrcode.QRCode(version=1,
+                                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                                box_size=10,
+                                border=4,)
+            _qr.add_data(rec.texto_modificado_qr)
+            image = _qr.make_image(fill_color="black", back_color="white")
+            a = image.get_image().tobytes()
+            rec.image_qr = base64.encodebytes(a)
 
     json_qr = fields.Char(
         'JSON QR AFIP',
