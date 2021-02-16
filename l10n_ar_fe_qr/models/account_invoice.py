@@ -15,16 +15,16 @@ class AccountInvoice(models.Model):
                 try:
                     dict_invoice = {
                         'ver': '1',
-                        'fecha': str(rec.date_invoice), # OK
-                        'cuit': int(rec.company_id.partner_id.main_id_number), #OK
-                        'ptoVta': rec.journal_id.point_of_sale_number, # OK
-                        'tipoCmp': 1,# int(rec.l10n_latam_document_type_id.code), #?
-                        'nroCmp': 2, #int(rec.name.split('-')[2]), #?
-                        'importe': rec.amount_total, # OK
-                        'moneda': 3, #rec.currency_id.l10n_ar_afip_code, ###
-                        'ctz': 4, #rec.l10n_ar_currency_rate, ###
-                        'tipoDocRec': 5, #int(rec.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code), ##
-                        'nroDocRec': int(rec.partner_id.main_id_number), # OK
+                        'fecha': rec.date_invoice,
+                        'cuit': rec.company_id.partner_id.main_id_number,
+                        'ptoVta': rec.journal_id.point_of_sale_number,
+                        'tipoCmp': rec.document_type_id.code,
+                        'nroCmp': rec.invoice_number,
+                        'importe': rec.amount_total,
+                        'moneda': rec.currency_id.afip_code,
+                        'ctz': rec.currency_rate,
+                        #'tipoDocRec': int(rec.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code), ##
+                        #'nroDocRec': int(rec.partner_id.main_id_number), # OK
                         'tipoCodAut': 'E',
                         'codAut': rec.afip_auth_code, # OK
                         }
@@ -45,11 +45,18 @@ class AccountInvoice(models.Model):
             _qr = qrcode.QRCode(version=1,
                                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                                 box_size=10,
-                                border=4,)
+                                border=4)
+
             _qr.add_data(rec.texto_modificado_qr)
-            image = _qr.make_image(fill_color="black", back_color="white")
-            a = image.get_image().tobytes()
-            rec.image_qr = base64.encodebytes(a)
+            _qr.make(fit=True)
+            img = _qr.make_image(fill='black', back_color='white')
+            a = img.tobytes()
+
+            img.save('/opt/odoo/etc/cacao1.jpeg')
+            with open('/opt/odoo/etc/cacao1.jpeg', 'rb') as f:
+                 im = base64.b64encode(f.read())
+
+            rec.image_qr = im
 
     json_qr = fields.Char(
         'JSON QR AFIP',
