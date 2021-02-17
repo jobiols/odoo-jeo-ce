@@ -6,11 +6,13 @@
     'category': 'Invoicing',
     'summary': 'Add QR to Invoice',
     'depends': [
+        'base',
         'account',
+        'l10n_ar_afipws_fe'
     ],
     'data': [
-#        'views/afip_invoice_form_view.xml',
-#        'reports/custom_reports.xml'
+        'views/afip_invoice_form_view.xml',
+        'reports/custom_reports.xml'
     ],
 
     'installable': True,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="0">
 
         <!-- Printed Invoice 
         <record id="l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice"
@@ -12,8 +12,7 @@
         </record>
 -->
 
-        <openerp>
-            <data noupdate="0">
+
             <!-- Printed Invoice -->
                     <record id="l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice"
                             context="{'no_key_lines':True}"
@@ -38,24 +37,12 @@
                 </record>
         
                 <function
-                    eval="([ref('action_aeroo_report_ar_einvoice')])"
+                    eval="([ref('l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice')])"
                     id="update_lines_ar_invoice"
                     model="ir.actions.report.xml"
                     name="update_lines_that_apply"/>
-            </data>
-        </openerp>
+
         
-
-
-
-
-
-
-
-
-
-
-
 
 <!--
 
