@@ -2,72 +2,45 @@
 <openerp>
     <data noupdate="0">
 
-        <!-- Printed Invoice 
+        <!-- Printed Invoice -->
         <record id="l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice"
-            context="{'no_key_lines':True}"
-            model="ir.actions.report.xml">
-        <field name="report_rml">l10n_ar_fe_qr/reports/einvoice.odt</field>
-        <field name="background_image" type="base64"
-            file="l10n_ar_fe_qr/reports/einvoice.png"/>
-        </record>
--->
-
-
-            <!-- Printed Invoice -->
-                    <record id="l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice"
-                            context="{'no_key_lines':True}"
-                            model="ir.actions.report.xml">
-
-                    <field name="name">Argentinian Aeroo Electronic Invoice</field>
-                    <field name="type">ir.actions.report.xml</field>
-                    <field name="model">account.invoice</field>
-                    <field name="sequence" eval="5"/>  
-                    <field name="report_name">aeroo_report_ar_einvoice</field>
-                    <field name="report_type">aeroo</field>
-                    <field name="in_format">oo-odt</field>
-                    <field name="parser_loc">l10n_ar_aeroo_base/parser.py</field>
-                    <field name="parser_state">loc</field>
-                    <field name="report_rml">l10n_ar_fe_qr/reports/einvoice.odt</field>
-                    <field name="tml_source">file</field>
-                    <field name="print_logo">company_logo</field>
-                    <field name="background_image" type="base64" file="l10n_ar_fe_qr/reports/einvoice.png"/>
-                    <field name="use_background_image" eval="True"/>
-                    <field name="account_invoice_split_invoice" eval="False"/>
-                    <field name="out_format" ref="report_aeroo.report_mimetypes_pdf_odt"/>
-                </record>
-        
-                <function
-                    eval="([ref('l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice')])"
-                    id="update_lines_ar_invoice"
-                    model="ir.actions.report.xml"
-                    name="update_lines_that_apply"/>
-
-        
-
-<!--
-
-        <record id="action_aeroo_report_ar_einvoice" context="{'no_key_lines':True}" model="ir.actions.report">
+                context="{'no_key_lines':True}"
+                model="ir.actions.report.xml">
             <field name="name">Argentinian Aeroo Electronic Invoice</field>
+            <field name="type">ir.actions.report.xml</field>
             <field name="model">account.invoice</field>
-            <field name="sequence" eval="5"/>
+            <field name="sequence" eval="5"/>  
             <field name="report_name">aeroo_report_ar_einvoice</field>
             <field name="report_type">aeroo</field>
             <field name="in_format">oo-odt</field>
-            <field name="report_file">l10n_ar_fe_qr/reports/einvoice_with_footer.odt</field>
+            <field name="parser_loc">l10n_ar_aeroo_base/parser.py</field>
+            <field name="parser_state">loc</field>
+            <field name="report_rml">l10n_ar_fe_qr/reports/einvoice.odt</field>
             <field name="tml_source">file</field>
             <field name="print_logo">company_logo</field>
             <field name="background_image" type="base64" file="l10n_ar_fe_qr/reports/einvoice.png"/>
-            <field name="process_sep" eval="True"/>
             <field name="use_background_image" eval="True"/>
             <field name="account_invoice_split_invoice" eval="False"/>
             <field name="out_format" ref="report_aeroo.report_mimetypes_pdf_odt"/>
-            <field name="print_report_name">(object.state in ['proforma', 'proforma2'] and 'PROFORMA' or (object.document_type_id.report_name or 'Comprobante')) + " " + (object.document_number or '')</field>
         </record>
+
         <function
-            eval="([ref('action_aeroo_report_ar_einvoice')])"
+            eval="([ref('l10n_ar_aeroo_einvoice.action_aeroo_report_ar_einvoice')])"
             id="update_lines_ar_invoice"
-            model="ir.actions.report"
+            model="ir.actions.report.xml"
             name="update_lines_that_apply"/>
--->            
-      </data>
+
+        <!-- ir.actions.report.xml inherit form view -->
+        <record id="act_report_xml_view1" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml.inherit.view.form</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="inherit_id" ref="report_aeroo.act_report_xml_view1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='report_rml']" position="after">
+                    <field name="background_image"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
 </openerp>
