@@ -14,7 +14,7 @@ source /opt/maintainer-tools/env/bin/activate
 oca-gen-addon-readme \
 	--org-name jobiols \
 	--repo-name odoo-jeo-ce \
-	--branch 13.0 \
+	--branch 8.0 \
 	--addons-dir "$PWD" \
 	--gen-html
 
