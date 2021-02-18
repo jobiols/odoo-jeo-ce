@@ -10,9 +10,8 @@
         'l10n_ar_afipws_fe',
     ],
     'data': [
-#        'views/afip_invoice_form_view.xml',
         'reports/custom_reports.xml'
     ],
-    'installable': False,
+    'installable': True,
     'application': True,
 }
