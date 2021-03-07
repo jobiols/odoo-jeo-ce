@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-	<data>
+    <data>
 
-	<record id="view_invoice_form" model="ir.ui.view" >
-		<field name="name">L10N AR FE QR add qr fields</field>
-		<field name="model">account.invoice</field>
-		<field name="inherit_id" ref="l10n_ar_afipws_fe.view_invoice_form"></field>
-		<field name="arch" type="xml">
-			<field name="afip_xml_response" position="after">
-				<field name="afip_qr_code" />
-			</field>
-		</field>
-	</record>
-	
-	</data>
+    <record id="view_invoice_form" model="ir.ui.view" >
+        <field name="name">L10N AR FE QR add qr fields</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="l10n_ar_afipws_fe.view_invoice_form"></field>
+        <field name="arch" type="xml">
+            <field name="afip_xml_response" position="after">
+                <field name="afip_qr_code" />
+            </field>
+        </field>
+    </record>
+    
+    </data>
 </openerp>

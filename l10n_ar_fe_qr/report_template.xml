@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<openerp>
     <data>
        <template id="qr_report_fe_invoice_document" inherit_id="l10n_ar_report_fe.report_fe_invoice_document">
         <xpath expr="//div[@class='footer']" position="replace">
@@ -25,4 +25,4 @@
         </xpath>
         </template>
     </data>
-</odoo>
+</openerp>
