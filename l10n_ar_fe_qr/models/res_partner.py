@@ -14,11 +14,12 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     @api.one
-    def _get_id_number_sanitize(self):
+    def get_id_number_sanitize(self):
         """ Sanitize the identification number. Return the digits/interger value of
             the identification number
         """
-        id_number = self.document_number.replace('.', '').replace(' ', '').replace('-', '')
+        id_number = self.document_number.replace('.', '').replace(' ', '')
+        id_number = id_number.replace('-', '')
         if not id_number.isdigit():
             raise UserError(_('El numero de cuit es invalido para %s') % self.name)
         res = int(id_number)

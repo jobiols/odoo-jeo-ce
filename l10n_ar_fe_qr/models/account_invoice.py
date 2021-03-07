@@ -32,9 +32,9 @@ class AccountInvoice(models.Model):
                 data = {
                     'ver': 1,
                     'fecha': rec.date_invoice,
-                    'cuit': rec.company_id.partner_id._get_id_number_sanitize(),
+                    'cuit': rec.company_id.partner_id.get_id_number_sanitize(),
                     'ptoVta': rec.journal_id.point_of_sale_number,
-                    'tipoCmp': int(rec.journal_document_class_id.afip_document_class_id.afip_code),
+                    'tipoCmp': int(rec.journal_document_class_id.afip_document_class_id.afip_code), #noqa
                     'nroCmp': int(rec.invoice_number),
                     'importe': float(float_repr(rec.amount_total, precision_digits=2)),
                     'moneda': rec.currency_id.afip_code,
@@ -43,17 +43,17 @@ class AccountInvoice(models.Model):
                     'codAut': int(rec.afip_auth_code),
                 }
                 if rec.commercial_partner_id.document_number:
-                    data.update({'nroDocRec': rec.commercial_partner_id._get_id_number_sanitize()})
+                    data.update({'nroDocRec': rec.commercial_partner_id.get_id_number_sanitize()}) #noqa
                 if rec.commercial_partner_id.document_type_id:
-                    data.update({'tipoDocRec': rec.commercial_partner_id.document_type_id.afip_code})
-                qr_code = 'https://www.afip.gob.ar/fe/qr/?p=%s' % base64.b64encode(json.dumps(
-                    data, indent=None).encode('ascii')).decode('ascii')
+                    data.update({'tipoDocRec': rec.commercial_partner_id.document_type_id.afip_code}) #noqa
+                qr_code = 'https://www.afip.gob.ar/fe/qr/?p=%s' % base64.b64encode(json.dumps( #noqa
+                    data, indent=None).encode('ascii')).decode('ascii') #noqa
 
             rec.afip_qr_code = qr_code
-            rec.afip_qr_code_img = rec._make_image_qr(qr_code)
+            rec.afip_qr_code_img = rec.make_image_qr(qr_code)
 
     @api.model
-    def _make_image_qr(self, qr_code):
+    def make_image_qr(self, qr_code):
         """ Generate the required QR code """
         image = False
         if qr_code:
