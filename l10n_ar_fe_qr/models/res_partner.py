@@ -3,10 +3,7 @@
 # directory
 ##############################################################################
 
-#from io import BytesIO
-#import qrcode
 from openerp import models, api, _
-#from openerp.tools import float_repr
 from openerp.exceptions import Warning as UserError
 @api.multi
 class ResPartner(models.Model):
