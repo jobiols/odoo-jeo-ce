@@ -1,1 +1,2 @@
+m2crypto==0.19
 qrcode==6.1
