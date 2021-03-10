@@ -6,7 +6,8 @@
 
 from openerp import models, api, _
 from openerp.exceptions import Warning as UserError
-@api.multi
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
