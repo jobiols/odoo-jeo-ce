@@ -25,6 +25,9 @@ install:
   - export PATH=${HOME}/maintainer-quality-tools/travis:$PATH
   - travis_install_nightly
 
+before_install:
+  - apt-get install swig
+
 script:
   - travis_run_tests
 
