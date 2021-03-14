@@ -4,7 +4,7 @@
 # directory
 ##############################################################################
 
-from openerp import models, api, _
+from openerp import models, _
 from openerp.exceptions import Warning as UserError
 
 
