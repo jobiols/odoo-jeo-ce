@@ -26,6 +26,7 @@ install:
   - travis_install_nightly
 
 before_install:
+  - sudo apt-get update -y
   - sudo apt-get install build-essential python2-dev python-dev libssl-dev unixodbc-dev
   - sudo apt-get install swig
 
