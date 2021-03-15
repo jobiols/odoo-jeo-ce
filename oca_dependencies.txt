@@ -1,2 +1,2 @@
 odoo-argentina https://github.com/jobiols/odoo-argentina.git 8.0
-report_extended_account https://github.com/reporting-engine.git 8.0
+report_extended_account https://github.com/ingadhoc/reporting-engine.git 8.0
