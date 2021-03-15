@@ -9,7 +9,8 @@
     'depends': [
         'base',
         'account',
-        'l10n_ar_afipws_fe'
+        'l10n_ar_afipws_fe',
+        'l10n_ar_aeroo_einvoice'
     ],
     'data': [
         'views/afip_invoice_form_view.xml',
