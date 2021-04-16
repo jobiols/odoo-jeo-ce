@@ -46,9 +46,9 @@
         "sale_ux",  # mejoras en ventas
         # "auto_backup",  # poner el backup en: /var/odoo/backups/
         # "mail_activity_board_ux",  # quitar actividades del chatter
-        "partner_ref_unique",  # evita duplicados en referencia
-        "partner_vat_unique",  # evita duplicados numeros de referencia
-        "product_unique",  # no se pueden duplicar codigos de producto
+        #"partner_ref_unique",  # evita duplicados en referencia
+        #"partner_vat_unique",  # evita duplicados numeros de referencia
+        #"product_unique",  # no se pueden duplicar codigos de producto
         # "web_export_view",  # exportar cualquier vista en excel
         # "account_clean_cancelled_invoice_number",  # no esta migrado
         "web_responsive",
