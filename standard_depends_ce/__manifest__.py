@@ -31,8 +31,6 @@
         # para la localizacion argentina version Community
         "l10n_ar_ux",  # localizacion base + check + payment group + withholding
 
-
-
         "l10n_ar_afipws_fe",  # Factura electronica Argentina
         "l10n_ar_bank",  # Bancos Argentinos
         "base_currency_inverse_rate",  # TC en Argentino
@@ -43,8 +41,8 @@
         # Para mejorar la usabilidad
         "base_ux",  # mejoras de base
         "product_ux",  # mejoras en productos
-        "sale_ux",  # mejoras en ventas
-        # "auto_backup",  # poner el backup en: /var/odoo/backups/
+    #"sale_ux",  # mejoras en ventas falla
+        "auto_backup",  # poner el backup en: /var/odoo/backups/
         # "mail_activity_board_ux",  # quitar actividades del chatter
         #"partner_ref_unique",  # evita duplicados en referencia
         #"partner_vat_unique",  # evita duplicados numeros de referencia
