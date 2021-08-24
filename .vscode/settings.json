@@ -10,4 +10,5 @@
     "files.trimFinalNewlines": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "files.trimTrailingWhitespace": true,
+    "restructuredtext.languageServer.disabled": true,
 }
