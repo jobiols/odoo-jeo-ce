@@ -22,3 +22,6 @@ Python libraries which we depend from.
 --------------------------------------
 
 See the file requirements.txt
+
+empezo la migracion
+
