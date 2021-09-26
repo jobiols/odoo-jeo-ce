@@ -1,26 +1,24 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+
+from odoo import api, fields, models, _
+from odoo.tools import date_utils
+from datetime import date, timedelta, datetime
 import base64
 import calendar
-from datetime import datetime, timedelta
-from odoo.tools import date_utils
-from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-# Diseno de registro de exportacion segun documento de ARBA
-# www.arba.gov.ar/Archivos/Publicaciones/dise%C3%B1o_de_registros_bancos.pdf
-# 1.1. Percepciones ( excepto actividad 29, 7 quincenal y 17 de Bancos)
-# 1.7. Retenciones ( excepto actividad 26, 6 de Bancos y 17 de Bancos y No
-# Bancos)
+# Diseno de registro de exportacion segun documento de sicore
+# https://www.afip.gob.ar/iva/documentos/IVAEspecificacion.pdf
 
 WITHHOLDING = '6'
 PERCEPTION = '7'
 
 
-class AccountExportArba(models.Model):
-    _name = 'account.export.arba'
-    _description = 'account.export.arba'
+class AccountExportSicore(models.Model):
+    _name = 'account.export.sicore'
+    _description = 'account.export.sicore'
 
-    year = fields.Char(
+    year = fields.Integer(
         default=lambda self: self._default_year(),
         help='año del periodo',
         string='Año'
@@ -58,16 +56,16 @@ class AccountExportArba(models.Model):
         readonly=True,
         compute="_compute_dates"
     )
-    export_arba_data = fields.Text(
+    export_sicore_data = fields.Text(
         'Contenido archivo'
     )
-    export_arba_file = fields.Binary(
+    export_sicore_file = fields.Binary(
         'Descargar Archivo',
         compute="_compute_files",
         readonly=True
     )
-    export_arba_filename = fields.Char(
-        'Archivo ARBA',
+    export_sicore_filename = fields.Char(
+        'Archivo sicore',
         compute="_compute_files",
         readonly=True
     )
@@ -80,30 +78,25 @@ class AccountExportArba(models.Model):
 
     @staticmethod
     def _last_month():
-        """ Devolver el último dia del mes pasado
-        """
-        today = fields.Date.today()
-        first = date_utils.start_of(today, 'month')
+        today = date.today()
+        first = today.replace(day=1)
         return first - timedelta(days=1)
 
     def _default_year(self):
-        """ Año por defecto es el que corresponde al mes pasado
-        """
         return self._last_month().year
 
     def _default_month(self):
-        """ Mes por defecto es el mes pasado
-        """
         return self._last_month().month
 
     @api.onchange('year', 'month')
     def _compute_period(self):
         for reg in self:
-            reg.period = '%s/%.2ds' % (reg.year, reg.month)
+            reg.period = '%s/%s' % (reg.year, reg.month)
 
     @api.onchange('year', 'month', 'quincena', 'doc_type')
     def _compute_dates(self):
-        """ Dado el mes y el año calcular el primero y el ultimo dia del periodo
+        """ Dado el mes y el año calcular el primero y el ultimo dia del
+            periodo
         """
         for rec in self:
             # Las retenciones se hacen por mes
@@ -127,37 +120,28 @@ class AccountExportArba(models.Model):
             rec.date_from = _ds
             rec.date_to = _de
 
-    @api.depends('export_arba_data')
+    @api.depends('export_sicore_data')
     def _compute_files(self):
         for rec in self:
-
             # segun vimos aca la afip espera "ISO-8859-1" en vez de utf-8
-            # http://www.planillasutiles.com.ar/2015/08/
-            # como-descargar-los-archivos-de.html
-            # filename AR-30708346655-2019010-7-LOTE1.txt
-            #             |  cuit   | |fech|x y
-            # x quincena
-            # y ret / perc
-            # quincena = 1 primera, 2 segunda 0 mensual
+            # filename sicore-30708346655-201901.txt
 
             if not rec.env.company.vat:
                 raise UserError(_('No tiene configurado el CUIT para esta compañia'))
 
             cuit = rec.env.company.vat
             if rec.date_from and rec.date_to:
-                date = '%s%.2d' % (rec.date_from.year, rec.date_from.month)
+                _date = '%s%s' % (rec.date_from.year, rec.date_from.month)
             else:
-                date = '000000'
-            doc_type = WITHHOLDING
-            quincena = rec.quincena if rec.quincena is not False else 0
+                _date = '000000'
 
-            filename = 'AR-%s-%s%s-%s-LOTE1.txt' % (cuit, date, quincena, doc_type)
-            rec.export_arba_filename = filename
-            if rec.export_arba_data:
-                rec.export_arba_file = base64.encodebytes(
-                    rec.export_arba_data.encode('ISO-8859-1'))
+            filename = 'sicore-%s-%s.txt' % (cuit, _date)
+            rec.export_sicore_filename = filename
+            if rec.export_sicore_data:
+                rec.export_sicore_file = base64.encodebytes(
+                    rec.export_sicore_data.encode('ISO-8859-1'))
             else:
-                rec.export_arba_file = False
+                rec.export_sicore_file = False
 
     def get_withholding_payments(self):
         """ Obtiene los pagos a proveedor que son retenciones y que
@@ -175,12 +159,12 @@ class AccountExportArba(models.Model):
             estan en el periodo seleccionado.
         """
 
-        # busco el id de la etiqueta que marca los impuestos de IIBB
-        name = 'Ret/Perc IIBB Aplicada'
+        # busco el id de la etiqueta que marca los impuestos de Ganancias
+        name = 'Ret/Perc SICORE Aplicada'
         account_tag_obj = self.env['account.account.tag']
-        perc_iibb = account_tag_obj.search([('name', '=', name)]).id
+        percSICORE = account_tag_obj.search([('name', '=', name)]).id
 
-        invoice_obj = self.env['account.move']
+        invoice_obj = self.env['account.invoice']
         invoices = invoice_obj.search([
             ('date_invoice', '>=', self.date_from),
             ('date_invoice', '<=', self.date_to),
@@ -189,15 +173,13 @@ class AccountExportArba(models.Model):
         ])
         ret = invoice_obj
 
-        # TODO Aca hay problemas
         for inv in invoices:
             if any([tax for tax in inv.tax_line_ids
-                    if perc_iibb in tax.tax_id.tag_ids.ids]):
+                    if percSICORE in tax.tax_id.tag_ids.ids]):
                 ret += inv
         return ret
 
-    def compute_arba_data(self):
-
+    def compute_sicore_data(self):
         line = ''
         for rec in self:
             if rec.doc_type == WITHHOLDING:
@@ -207,34 +189,29 @@ class AccountExportArba(models.Model):
                 data = []
                 for payment in payments:
 
-                    # Campo 01 -- Cuit contribuyente retenido
-                    cuit = payment.payment_group_id.partner_id.main_id_number
-                    cuit = '%s-%s-%s' % (cuit[0:2], cuit[2:10], cuit[10:])
-                    line = cuit
+                    # Campo 01 -- Regimen
+                    regimen = '1'
+                    line = regimen.zfill(3)
 
-                    # Campo 02 -- Fecha de la retencion
+                    # Campo 02 -- Cuit Agente
+                    cuit = payment.payment_group_id.partner_id.main_id_number
+                    line += cuit
+
+                    # Campo 03 -- Fecha Retencion
                     date = datetime.strptime(payment.payment_date, '%Y-%m-%d')
                     date = date.strftime('%d/%m/%Y')
                     line += date
 
-                    # Campo 03 -- Numero de sucursal
-                    value = payment.withholding_number[:4]
-                    line += value.zfill(4)
+                    # Campo 04 -- Numero comprobante
+                    line += payment.withholding_number[0:16].zfill(16)
 
-                    # Campo 04 -- Numero de emision
-                    value = payment.withholding_number[5:]
-                    line += value.zfill(8)
-
-                    # Campo 05 -- Importe de Retencion
+                    # Campo 05 -- Importe retencion
                     amount = '{:.2f}'.format(payment.amount)
-                    line += amount.zfill(11)
-
-                    # Campo 06 -- Tipo de operacion
-                    line += 'A'
+                    line += amount.zfill(16)
 
                     data.append(line)
             else:
-                # Percepciones
+                #  Percepciones
                 # traer todas las facturas con percepciones en el periodo
                 invoices = rec.get_perception_invoices()
                 data = []
@@ -245,50 +222,28 @@ class AccountExportArba(models.Model):
                         lambda r: r.tax_id.tax_group_id.type == 'perception')
 
                     for tax in perception_taxes:
-                        # Campo 1 -- Cuit contribuyente percibido
-                        cuit = invoice.partner_id.vat
-                        cuit = '%s-%s-%s' % (cuit[0:2], cuit[2:10], cuit[10:])
+                        # Campo 1 -- Regimen
+                        regimen = '1'
+                        line = regimen.zfill(3)
+
+                        # Campo 2 Cuit Agente
+                        cuit = invoice.partner_id.main_id_number
                         line = cuit
 
-                        # Campo 2 -- Fecha de la percepcion
-                        date = datetime.strptime(invoice.date_invoice,
-                                                 '%Y-%m-%d')
+                        # Campo 3 -- Fecha de la percepcion
+                        date = datetime.strptime(invoice.date_invoice, '%Y-%m-%d')
                         date = date.strftime('%d/%m/%Y')
                         line += date
 
-                        # Campo 3 -- Tipo de comprobante
-                        # F=Factura R=Recibo C=Nota Crédito, D=Nota Debito
-                        # V=Nota de Venta.
-                        type_ = invoice.document_type_id.internal_type
-                        if type_ == 'invoice':
-                            line += 'F'
-                        if type_ == 'credit_note':
-                            line += 'C'
-                        if type_ == 'debit_note':
-                            line += 'D'
+                        # Campo 4 -- Numero comprobante
+                        line += invoice.document_number[0:16].zfill(16)
 
-                        # Campo 4 -- Letra comprobante
-                        _tmp = invoice.journal_document_type_id
-                        line += _tmp.document_type_id.document_letter_id.name
-
-                        # Campo 5 -- Numero Surursal
-                        value = invoice.document_number[:4]
-                        line += value.zfill(4)
-
-                        # Campo 6 -- Numero Emision
-                        value = invoice.document_number[5:]
-                        line += value.zfill(8)
-
-                        # Campo 7 -- Monto imponible
+                        # Campo 5 -- Importe de percepcion
                         # ver si es invoice o refund
                         invoice = invoice.type == 'in_invoice'
-                        base = tax.base if invoice else -tax.base
-                        line += '{:.2f}'.format(base).zfill(12)
-
-                        # Campo 6 -- Importe de percepcion
                         amount = tax.amount if invoice else -tax.amount
                         line += '{:.2f}'.format(amount).zfill(11)
 
                 data.append(line)
 
-            rec.export_arba_data = '\n'.join(data)
+            rec.export_sicore_data = '\n'.join(data)
