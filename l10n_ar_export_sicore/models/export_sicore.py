@@ -194,16 +194,18 @@ class AccountExportSicore(models.Model):
                     line = regimen.zfill(3)
 
                     # Campo 02 -- Cuit Agente
-                    cuit = payment.payment_group_id.partner_id.main_id_number
+                    cuit = payment.payment_group_id.partner_id.vat
                     line += cuit
 
                     # Campo 03 -- Fecha Retencion
-                    date = datetime.strptime(payment.payment_date, '%Y-%m-%d')
-                    date = date.strftime('%d/%m/%Y')
-                    line += date
+                    _date = payment.payment_date.strftime('%d/%m/%Y')
+                    line += _date
 
                     # Campo 04 -- Numero comprobante
-                    line += payment.withholding_number[0:16].zfill(16)
+                    if payment.withholding_number:
+                        line += payment.withholding_number[0:16].zfill(16)
+                    else:
+                        line += ''.zfill(16)
 
                     # Campo 05 -- Importe retencion
                     amount = '{:.2f}'.format(payment.amount)
@@ -227,13 +229,12 @@ class AccountExportSicore(models.Model):
                         line = regimen.zfill(3)
 
                         # Campo 2 Cuit Agente
-                        cuit = invoice.partner_id.main_id_number
+                        cuit = invoice.partner_id.vat
                         line = cuit
 
                         # Campo 3 -- Fecha de la percepcion
-                        date = datetime.strptime(invoice.date_invoice, '%Y-%m-%d')
-                        date = date.strftime('%d/%m/%Y')
-                        line += date
+                        _date = invoice.date_invoice.strftime('%d/%m/%Y')
+                        line += _date
 
                         # Campo 4 -- Numero comprobante
                         line += invoice.document_number[0:16].zfill(16)
