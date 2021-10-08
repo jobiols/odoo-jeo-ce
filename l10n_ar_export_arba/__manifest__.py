@@ -19,7 +19,7 @@
     'version': '13.0.1.0.0',
     'author':  'Moldeo Interactive, jeo Soft',
     'category': 'Accounting',
-    'sequence': 14,
+    'sequence': 15,
     'summary': '',
     'license': 'AGPL-3',
     'images': [
@@ -35,7 +35,7 @@
     ],
     'test': [
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
     'application': False,
 }

@@ -3,7 +3,7 @@
 {
     "name": "Product Tags",
     "summary": "Add product Tags",
-    "version": "13.0.1.0.0",
+    "version": "15.0.1.0.0",
     "development_status": "Production/Stable",
     "category": "Tools",
     "website": "http://jeosoft.com.ar",
@@ -14,5 +14,5 @@
     "data": ["security/ir.model.access.csv", "views/product_view.xml"],
     "demo": ["demo/product_tags.xml"],
     "application": False,
-    "installable": True,
+    "installable": False,
 }

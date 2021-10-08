@@ -20,7 +20,7 @@
 
 {
     "name": "Standard Dependencies CE",
-    "version": "13.0.1.1.0",
+    "version": "15.0.1.1.0",
     "category": "Tools",
     "summary": "Add standard dependecies for ADHOC Argentinian localization "
                "on Community Edition",
@@ -53,7 +53,7 @@
     ],
     "data": [],
     "demo": [],
-    'installable': True,
+    'installable': False,
     "auto_install": False,
     "application": False,
 }

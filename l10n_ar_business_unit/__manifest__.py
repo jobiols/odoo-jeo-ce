@@ -3,7 +3,7 @@
 {
     "name": "l10n_ar Business Unit",
     "summary": "Module summary",
-    "version": "13.0.1.0.0",
+    "version": "15.0.1.0.0",
     "development_status": "Beta",  # "Alpha|Beta|Production/Stable|Mature"
     "category": "Tools",
     "website": "http://jeosoft.com.ar",
@@ -11,7 +11,7 @@
     "maintainers": ["jobiols"],
     "license": "AGPL-3",
     "application": False,
-    "installable": True,
+    "installable": False,
     "depends": [
         "base",
         "l10n_ar",
