@@ -7,8 +7,7 @@ import base64
 import calendar
 from odoo.exceptions import UserError
 
-# Diseno de registro de exportacion segun documento de sicore
-# https://www.afip.gob.ar/iva/documentos/IVAEspecificacion.pdf
+# Diseno de registro de exportacion segun documento en la carpeta doc
 
 WITHHOLDING = '6'
 PERCEPTION = '7'
@@ -189,27 +188,76 @@ class AccountExportSicore(models.Model):
                 data = []
                 for payment in payments:
 
-                    # Campo 01 -- Regimen
-                    regimen = '1'
-                    line = regimen.zfill(3)
+                    # Campo 01 -- Código de comprobante
+                    code = '1'
+                    line = code.zfill(2)
 
-                    # Campo 02 -- Cuit Agente
-                    cuit = payment.payment_group_id.partner_id.vat
-                    line += cuit
-
-                    # Campo 03 -- Fecha Retencion
+                    # Campo 02 -- Fecha de emision del comprobante
                     _date = payment.payment_date.strftime('%d/%m/%Y')
                     line += _date
 
-                    # Campo 04 -- Numero comprobante
-                    if payment.withholding_number:
+                    # Campo 03 -- Numero comprobante
+                    try:
                         line += payment.withholding_number[0:16].zfill(16)
-                    else:
-                        line += ''.zfill(16)
+                    except Exception as _ex:
+                        raise UserError(_('El pago %s no tiene numero de '
+                                          'comprobante') % payment.name) from _ex
 
-                    # Campo 05 -- Importe retencion
+                    # Campo 04 -- Importe del comprobante
                     amount = '{:.2f}'.format(payment.amount)
                     line += amount.zfill(16)
+
+                    # Campo 05 Código de impuesto
+                    code = '0'
+                    line += amount.zfill(4)
+
+                    # Campo 06 Código de régimen
+                    code = '0'
+                    line += amount.zfill(3)
+
+                    # Campo 07 Código de operación
+                    code = '0'
+                    line += amount.zfill(1)
+
+                    # Campo 07 Base de Cálculo
+                    amount = '{:.2f}'.format(0)
+                    line += amount.zfill(14)
+
+                    # Campo 08 Fecha de emisión de la retención
+                    _date = fields.Date.today().strftime('%d/%m/%Y')
+                    line += _date
+
+                    # Campo 09 Código de condición
+                    code = '0'
+                    line += code.zfill(2)
+
+                    # Campo 10 Retención practicada a sujetos suspendidos según:
+                    code = '0'
+                    line += code.zfill(1)
+
+                    # Campo 10 Importe de la retencion
+                    amount = '{:.2f}'.format(1.1)
+                    line += amount.zfill(14)
+
+                    # Campo 11 Porcentaje de exclusión
+                    amount = '{:.2f}'.format(1.1)
+                    line += amount.zfill(6)
+
+                    # Campo 12 Fecha publicación o de finalización de la vigencia
+                    _date = fields.Date.today().strftime('%d/%m/%Y')
+                    line += _date
+
+                    # Campo 13 Tipo de documento del retenido
+                    code = '0'
+                    line += code.zfill(2)
+
+                    # Campo 14 Número de documento del retenido
+                    cuit = payment.payment_group_id.partner_id.vat
+                    line += cuit.zfill(20)
+
+                    # Campo 15 Número certificado original
+                    number = '0'
+                    line += number.zfill(14)
 
                     data.append(line)
             else:
@@ -224,26 +272,93 @@ class AccountExportSicore(models.Model):
                         lambda r: r.tax_id.tax_group_id.type == 'perception')
 
                     for tax in perception_taxes:
-                        # Campo 1 -- Regimen
-                        regimen = '1'
-                        line = regimen.zfill(3)
+                        # Campo 01 -- Código de comprobante
+                        code = '1'
+                        line = code.zfill(2)
 
-                        # Campo 2 Cuit Agente
-                        cuit = invoice.partner_id.vat
-                        line = cuit
-
-                        # Campo 3 -- Fecha de la percepcion
-                        _date = invoice.date_invoice.strftime('%d/%m/%Y')
+                        # Campo 02 -- Fecha de emision del comprobante
+                        _date = payment.payment_date.strftime('%d/%m/%Y')
                         line += _date
 
-                        # Campo 4 -- Numero comprobante
-                        line += invoice.document_number[0:16].zfill(16)
+                        # Campo 03 -- Numero comprobante
+                        try:
+                            line += payment.withholding_number[0:16].zfill(16)
+                        except Exception as _ex:
+                            raise UserError(_('El pago %s no tiene numero de '
+                                            'comprobante') % payment.name) from _ex
 
-                        # Campo 5 -- Importe de percepcion
-                        # ver si es invoice o refund
-                        invoice = invoice.type == 'in_invoice'
-                        amount = tax.amount if invoice else -tax.amount
-                        line += '{:.2f}'.format(amount).zfill(11)
+                        # Campo 04 -- Importe del comprobante
+                        amount = '{:.2f}'.format(payment.amount)
+                        line += amount.zfill(16)
+
+                        # Campo 05 Código de impuesto
+                        code = '0'
+                        line += amount.zfill(4)
+
+                        # Campo 06 Código de régimen
+                        code = '0'
+                        line += amount.zfill(3)
+
+                        # Campo 07 Código de operación
+                        code = '0'
+                        line += amount.zfill(1)
+
+                        # Campo 07 Base de Cálculo
+                        amount = '{:.2f}'.format(0)
+                        line += amount.zfill(14)
+
+                        # Campo 08 Fecha de emisión de la retención
+                        _date = fields.Date.today().strftime('%d/%m/%Y')
+                        line += _date
+
+                        # Campo 09 Código de condición
+                        code = '0'
+                        line += code.zfill(2)
+
+                        # Campo 10 Retención practicada a sujetos suspendidos según:
+                        code = '0'
+                        line += code.zfill(1)
+
+                        # Campo 10 Importe de la retencion
+                        amount = '{:.2f}'.format(1.1)
+                        line += amount.zfill(14)
+
+                        # Campo 11 Porcentaje de exclusión
+                        amount = '{:.2f}'.format(1.1)
+                        line += amount.zfill(6)
+
+                        # Campo 12 Fecha publicación o de finalización de la vigencia
+                        _date = fields.Date.today().strftime('%d/%m/%Y')
+                        line += _date
+
+                        # Campo 13 Tipo de documento del retenido
+                        code = '0'
+                        line += code.zfill(2)
+
+                        # Campo 14 Número de documento del retenido
+                        cuit = payment.payment_group_id.partner_id.vat
+                        line += cuit.zfill(20)
+
+                        # Campo 15 Número certificado original
+                        number = '0'
+                        line += number.zfill(14)
+
+                        # # Campo 2 Cuit Agente
+                        # cuit = invoice.partner_id.vat
+                        # line = cuit
+
+                        # # Campo 3 -- Fecha de la percepcion
+                        # _date = invoice.date_invoice.strftime('%d/%m/%Y')
+                        # line += _date
+
+                        # # Campo 4 -- Numero comprobante
+                        # line += invoice.document_number[0:16].zfill(16)
+
+                        # # Campo 5 -- Importe de percepcion
+                        # # ver si es invoice o refund
+                        # invoice = invoice.type == 'in_invoice'
+                        # amount = tax.amount if invoice else -tax.amount
+                        # line += '{:.2f}'.format(amount).zfill(11)
 
                 data.append(line)
 
