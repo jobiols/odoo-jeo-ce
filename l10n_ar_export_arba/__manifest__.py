@@ -27,7 +27,6 @@
     'depends': [
         'base',
         'account',
-        'l10n_ar'
     ],
     'data': [
         'security/ir.model.access.csv',

@@ -61,7 +61,7 @@
 
         <menuitem id="menu_account_export_sicore"
                   action="action_account_export_sicore"
-                  parent="l10n_ar.account_reports_ar_statements_menu"
+                  parent="account.menu_finance_entries_actions"
                   sequence="6"/>
 
     </data>
