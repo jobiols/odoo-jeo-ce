@@ -188,22 +188,22 @@ class AccountExportSicore(models.Model):
                 data = []
                 for payment in payments:
 
-                    # Campo 01 -- Código de comprobante
+                    # Campo 01 -- Código de comprobante para retención len = 2
                     code = '1'
                     line = code.zfill(2)
 
-                    # Campo 02 -- Fecha de emision del comprobante
+                    # Campo 02 -- Fecha de emision del comprobante len = 10
                     _date = payment.payment_date.strftime('%d/%m/%Y')
                     line += _date
 
-                    # Campo 03 -- Numero comprobante
+                    # Campo 03 -- Numero comprobante len = 16
                     try:
                         line += payment.withholding_number[0:16].zfill(16)
                     except Exception as _ex:
                         raise UserError(_('El pago %s no tiene numero de '
                                           'comprobante') % payment.name) from _ex
 
-                    # Campo 04 -- Importe del comprobante
+                    # Campo 04 -- Importe del comprobante len = 16
                     amount = '{:.2f}'.format(payment.amount)
                     line += amount.zfill(16)
 
@@ -272,22 +272,22 @@ class AccountExportSicore(models.Model):
                         lambda r: r.tax_id.tax_group_id.type == 'perception')
 
                     for tax in perception_taxes:
-                        # Campo 01 -- Código de comprobante
-                        code = '1'
+                        # Campo 01 -- Código de comprobante para percepción
+                        code = '2'
                         line = code.zfill(2)
 
-                        # Campo 02 -- Fecha de emision del comprobante
+                        # Campo 02 -- Fecha de emision del comprobante len = 10
                         _date = payment.payment_date.strftime('%d/%m/%Y')
                         line += _date
 
-                        # Campo 03 -- Numero comprobante
+                        # Campo 03 -- Numero comprobante  len = 16
                         try:
                             line += payment.withholding_number[0:16].zfill(16)
                         except Exception as _ex:
                             raise UserError(_('El pago %s no tiene numero de '
                                             'comprobante') % payment.name) from _ex
 
-                        # Campo 04 -- Importe del comprobante
+                        # Campo 04 -- Importe del comprobante len = 16
                         amount = '{:.2f}'.format(payment.amount)
                         line += amount.zfill(16)
 
