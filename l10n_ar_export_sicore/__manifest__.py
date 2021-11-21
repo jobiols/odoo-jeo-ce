@@ -15,8 +15,8 @@
 #
 ##############################################################################
 {
-    'name': 'Exportacion sicore',
-    'version': '11.0.0.0.0',
+    'name': 'Exportación sicore',
+    'version': '13.0.1.0.0',
     'author':  'Moldeo Interactive, jeo Soft',
     'category': 'Accounting',
     'sequence': 14,
@@ -27,15 +27,16 @@
     'depends': [
         'base',
         'account',
-        'l10n_ar_account'
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/account_view.xml'
+        'views/account_view.xml',
+        'views/account_tax_view.xml',
     ],
     'test': [
     ],
-    'installable': False,
+    "excludes": ['web_enterprise'],
+    'installable': True,
     'auto_install': False,
     'application': False,
 }

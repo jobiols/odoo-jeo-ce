@@ -1,14 +1,22 @@
 {
-    "restructuredtext.confPath": "",
+    "python.linting.pylintArgs": [
+        "--load-plugins","pylint_odoo","-d","C0114,C8101,E0401,C0115,C0116"
+    ],
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.linting.pylintArgs": [
-        "--load-plugins=pylint_odoo",
-        "-d C0114,C0115,C0116"
+    "restructuredtext.confPath": "",
+
+    "sqltools.connections": [
+        {
+            "database": "wert_prod",
+            "driver": "PostgreSQL",
+            "name": "wert_prod",
+            "password": "odoo",
+            "port": 5432,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "odoo"
+        }
     ],
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "diffEditor.ignoreTrimWhitespace": false,
-    "files.trimTrailingWhitespace": true,
     "restructuredtext.languageServer.disabled": true,
 }

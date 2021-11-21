@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sales_discount_limit_view_tree" model="ir.ui.view">
+        <field name="name">sales.discount.limit.tree</field>
+        <field name="model">sales.discount.limit</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Discount Limit" editable="bottom">
+                <field name="discount"/>
+                <field name="group_id" required="1" options="{'no_create': True, 'no_edit': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sales_discount_limit_action" model="ir.actions.act_window">
+        <field name="name">Sales Discount Limit</field>
+        <field name="res_model">sales.discount.limit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_sales_discount_limit"
+        name="Sales Discount Limit"
+        parent="sale.menu_sale_config"
+        action="sales_discount_limit_action"
+    />
+
+</odoo>

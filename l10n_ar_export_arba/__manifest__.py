@@ -16,7 +16,7 @@
 ##############################################################################
 {
     'name': 'Exportacion ARBA',
-    'version': '11.0.0.0.0',
+    'version': '13.0.1.0.0',
     'author':  'Moldeo Interactive, jeo Soft',
     'category': 'Accounting',
     'sequence': 14,
@@ -27,7 +27,6 @@
     'depends': [
         'base',
         'account',
-        'l10n_ar_account'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -35,7 +34,8 @@
     ],
     'test': [
     ],
-    'installable': False,
+    "excludes": ['web_enterprise'],
+    'installable': True,
     'auto_install': False,
     'application': False,
 }

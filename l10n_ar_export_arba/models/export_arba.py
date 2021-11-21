@@ -1,10 +1,10 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
-
-from odoo import api, fields, models
-from datetime import date, timedelta
 import base64
-from datetime import datetime
 import calendar
+from datetime import datetime, timedelta
+from odoo.tools import date_utils
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 # Diseno de registro de exportacion segun documento de ARBA
 # www.arba.gov.ar/Archivos/Publicaciones/dise%C3%B1o_de_registros_bancos.pdf
@@ -20,7 +20,7 @@ class AccountExportArba(models.Model):
     _name = 'account.export.arba'
     _description = 'account.export.arba'
 
-    year = fields.Integer(
+    year = fields.Char(
         default=lambda self: self._default_year(),
         help='año del periodo',
         string='Año'
@@ -72,51 +72,61 @@ class AccountExportArba(models.Model):
         readonly=True
     )
 
+    def name_get(self):
+        res = []
+        for rec in self:
+            res.append((rec.id, '%s%.2d' % (rec.year, rec.month)))
+        return res
+
     @staticmethod
     def _last_month():
-        today = date.today()
-        first = today.replace(day=1)
+        """ Devolver el último dia del mes pasado
+        """
+        today = fields.Date.today()
+        first = date_utils.start_of(today, 'month')
         return first - timedelta(days=1)
 
     def _default_year(self):
+        """ Año por defecto es el que corresponde al mes pasado
+        """
         return self._last_month().year
 
     def _default_month(self):
+        """ Mes por defecto es el mes pasado
+        """
         return self._last_month().month
 
     @api.onchange('year', 'month')
-    @api.multi
     def _compute_period(self):
         for reg in self:
-            reg.period = '{}/{}'.format(reg.year, reg.month)
+            reg.period = '%s/%.2ds' % (reg.year, reg.month)
 
     @api.onchange('year', 'month', 'quincena', 'doc_type')
-    @api.multi
     def _compute_dates(self):
-        """ Dado el mes y el año calcular el primero y el ultimo dia del
-            periodo
+        """ Dado el mes y el año calcular el primero y el ultimo dia del periodo
         """
         for rec in self:
             # Las retenciones se hacen por mes
             if rec.doc_type == WITHHOLDING:
                 rec.quincena = 0
 
-            dts = datetime(rec.year, rec.month, 1)
-            last_day = calendar.monthrange(rec.year, rec.month)[1]
-            dte = datetime(rec.year, rec.month, last_day)
+            month = rec.month
+            year = int(rec.year)
+
+            _ds = fields.Date.to_date('%s-%.2d-01' % (year, month))
+            _de = date_utils.end_of(_ds, 'month')
 
             if rec.quincena == '1':
-                dts = datetime(rec.year, rec.month, 1)
-                dte = datetime(rec.year, rec.month, 15)
+                _ds = datetime(year, month, 1)
+                _de = datetime(year, rec.month, 15)
             if rec.quincena == '2':
-                dts = datetime(rec.year, rec.month, 16)
-                last_day = calendar.monthrange(rec.year, rec.month)[1]
-                dte = datetime(rec.year, rec.month, last_day)
+                _ds = datetime(year, month, 16)
+                last_day = calendar.monthrange(year, rec.month)[1]
+                _de = datetime(year, month, last_day)
 
-            rec.date_from = dts.strftime('%Y-%m-%d')
-            rec.date_to = dte.strftime('%Y-%m-%d')
+            rec.date_from = _ds
+            rec.date_to = _de
 
-    @api.multi
     @api.depends('export_arba_data')
     def _compute_files(self):
         for rec in self:
@@ -130,20 +140,24 @@ class AccountExportArba(models.Model):
             # y ret / perc
             # quincena = 1 primera, 2 segunda 0 mensual
 
-            cuit = rec.env.user.company_id.main_id_number
+            if not rec.env.company.vat:
+                raise UserError(_('No tiene configurado el CUIT para esta compañia'))
+
+            cuit = rec.env.company.vat
             if rec.date_from and rec.date_to:
-                date = rec.date_from[:4] + rec.date_from[5:7]
+                date = '%s%.2d' % (rec.date_from.year, rec.date_from.month)
             else:
                 date = '000000'
             doc_type = WITHHOLDING
             quincena = rec.quincena if rec.quincena is not False else 0
 
-            filename = 'AR-%s-%s%s-%s-LOTE1.txt' % (
-                cuit, date, quincena, doc_type)
+            filename = 'AR-%s-%s%s-%s-LOTE1.txt' % (cuit, date, quincena, doc_type)
             rec.export_arba_filename = filename
             if rec.export_arba_data:
                 rec.export_arba_file = base64.encodebytes(
                     rec.export_arba_data.encode('ISO-8859-1'))
+            else:
+                rec.export_arba_file = False
 
     def get_withholding_payments(self):
         """ Obtiene los pagos a proveedor que son retenciones y que
@@ -164,9 +178,9 @@ class AccountExportArba(models.Model):
         # busco el id de la etiqueta que marca los impuestos de IIBB
         name = 'Ret/Perc IIBB Aplicada'
         account_tag_obj = self.env['account.account.tag']
-        percIIBB = account_tag_obj.search([('name', '=', name)]).id
+        perc_iibb = account_tag_obj.search([('name', '=', name)]).id
 
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         invoices = invoice_obj.search([
             ('date_invoice', '>=', self.date_from),
             ('date_invoice', '<=', self.date_to),
@@ -175,13 +189,13 @@ class AccountExportArba(models.Model):
         ])
         ret = invoice_obj
 
+        # TODO Aca hay problemas
         for inv in invoices:
             if any([tax for tax in inv.tax_line_ids
-                    if percIIBB in tax.tax_id.tag_ids.ids]):
+                    if perc_iibb in tax.tax_id.tag_ids.ids]):
                 ret += inv
         return ret
 
-    @api.multi
     def compute_arba_data(self):
 
         line = ''
@@ -232,7 +246,7 @@ class AccountExportArba(models.Model):
 
                     for tax in perception_taxes:
                         # Campo 1 -- Cuit contribuyente percibido
-                        cuit = invoice.partner_id.main_id_number
+                        cuit = invoice.partner_id.vat
                         cuit = '%s-%s-%s' % (cuit[0:2], cuit[2:10], cuit[10:])
                         line = cuit
 

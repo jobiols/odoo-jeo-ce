@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <!-- account.tax inherit form view -->
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">L10N_AR_EXPORT_SICORE add sicore_tax_code</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/div" position="after">
+                <field name="sicore_tax_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
