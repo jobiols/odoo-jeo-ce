@@ -62,13 +62,11 @@ class AccountExportSicore(models.Model):
         'Descargar Archivo',
         compute="_compute_files",
         readonly=True,
-        store=True
     )
     export_sicore_filename = fields.Char(
         'Archivo sicore',
         compute="_compute_files",
         readonly=True,
-        store=True
     )
 
     def name_get(self):

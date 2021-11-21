@@ -30,8 +30,10 @@
                         </group>
 
                         <group string="Archivo y datos">
-                            <field name="export_sicore_file"/>
-                            <field name="export_sicore_data" readonly="1"/>
+                            <field name="export_sicore_filename" invisible="1"/>
+                            <field name="export_sicore_file" readonly="1" filename="export_sicore_filename"/>
+                            <field name="export_sicore_data"/>
+
                         </group>
                     </sheet>
                 </form>
