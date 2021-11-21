@@ -15,7 +15,7 @@
 #
 ##############################################################################
 {
-    'name': 'Exportacion sicore',
+    'name': 'Exportación sicore',
     'version': '13.0.1.0.0',
     'author':  'Moldeo Interactive, jeo Soft',
     'category': 'Accounting',
@@ -30,7 +30,8 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/account_view.xml'
+        'views/account_view.xml',
+        'views/account_tax_view.xml',
     ],
     'test': [
     ],
