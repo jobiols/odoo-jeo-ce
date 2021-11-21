@@ -3,7 +3,7 @@
     <data>
 
         <record id="view_account_export_arba_form" model="ir.ui.view">
-            <field name="name">account.export.sicore.form</field>
+            <field name="name">L10N AR EXPORT SICORE form</field>
             <field name="model">account.export.sicore</field>
             <field name="arch" type="xml">
                 <form>

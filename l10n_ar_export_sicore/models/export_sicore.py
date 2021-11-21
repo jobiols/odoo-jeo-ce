@@ -15,7 +15,7 @@ PERCEPTION = '7'
 
 class AccountExportSicore(models.Model):
     _name = 'account.export.sicore'
-    _description = 'account.export.sicore'
+    _description = 'Archivo de exportación para sicore'
 
     year = fields.Integer(
         default=lambda self: self._default_year(),
@@ -61,12 +61,14 @@ class AccountExportSicore(models.Model):
     export_sicore_file = fields.Binary(
         'Descargar Archivo',
         compute="_compute_files",
-        readonly=True
+        readonly=True,
+        store=True
     )
     export_sicore_filename = fields.Char(
         'Archivo sicore',
         compute="_compute_files",
-        readonly=True
+        readonly=True,
+        store=True
     )
 
     def name_get(self):
@@ -123,7 +125,8 @@ class AccountExportSicore(models.Model):
     def _compute_files(self):
         for rec in self:
             # segun vimos aca la afip espera "ISO-8859-1" en vez de utf-8
-            # filename sicore-30708346655-201901.txt
+            # filename SICORE-30708346655-201901.TXT
+            # Probamos con utf8 a ver que pasa.
 
             if not rec.env.company.vat:
                 raise UserError(_('No tiene configurado el CUIT para esta compañia'))
@@ -134,11 +137,12 @@ class AccountExportSicore(models.Model):
             else:
                 _date = '000000'
 
-            filename = 'sicore-%s-%s.txt' % (cuit, _date)
+            filename = 'SICORE-%s-%s.TXT' % (cuit, _date)
             rec.export_sicore_filename = filename
             if rec.export_sicore_data:
                 rec.export_sicore_file = base64.encodebytes(
-                    rec.export_sicore_data.encode('ISO-8859-1'))
+#                    rec.export_sicore_data.encode('ISO-8859-1'))
+                    rec.export_sicore_data.encode('UTF-8'))
             else:
                 rec.export_sicore_file = False
 
@@ -221,26 +225,28 @@ class AccountExportSicore(models.Model):
                                 (payment.tax_withholding_id.name))
                     line += amount.zfill(4)
 
-                    import wdb;wdb.set_trace()
-
                     # Campo 06 Código de régimen len 3
-                    code = '0'
-                    line += amount.zfill(3)
+                    if not payment.payment_group_id.regimen_ganancias_id:
+                        raise UserError(
+                            _('El grupo de pago %s no tiene cargado el régimen de '
+                              'ganancias.') % payment.payment_group_id.name)
+                    code = payment.payment_group_id.regimen_ganancias_id.display_name
+                    line += code.zfill(3)
 
                     # Campo 07 Código de operación len 1
-                    code = '0'
-                    line += amount.zfill(1)
+                    code = '1' # 1 retencion 2 percepcion
+                    line += code.zfill(1)
 
                     # Campo 08 Base de Cálculo len 14
-                    amount = '{:.2f}'.format(0)
+                    amount = '{:.2f}'.format(invoice.amount_untaxed)
                     line += amount.zfill(14)
 
                     # Campo 09 Fecha de emisión de la retención len 10
-                    _date = fields.Date.today().strftime('%d/%m/%Y')
+                    _date = payment.payment_date.strftime('%d/%m/%Y')
                     line += _date
 
                     # Campo 10 Código de condición len 2
-                    code = '0'
+                    code = '1'
                     line += code.zfill(2)
 
                     # Campo 11 Retención practicada a sujetos suspendidos según: len 1
@@ -248,11 +254,11 @@ class AccountExportSicore(models.Model):
                     line += code.zfill(1)
 
                     # Campo 12 Importe de la retencion len 14
-                    amount = '{:.2f}'.format(1.1)
+                    amount = '{:.2f}'.format(payment.amount)
                     line += amount.zfill(14)
 
                     # Campo 13 Porcentaje de exclusión len 6
-                    amount = '{:.2f}'.format(1.1)
+                    amount = '{:.2f}'.format(0)
                     line += amount.zfill(6)
 
                     # Campo 14 Fecha publicación o de finalización de la vigencia len 10
@@ -260,7 +266,9 @@ class AccountExportSicore(models.Model):
                     line += _date
 
                     # Campo 15 Tipo de documento del retenido len 2
-                    code = '0'
+                    partner_id = payment.payment_group_id.partner_id
+                    id_type = partner_id.l10n_latam_identification_type_id
+                    code = id_type.l10n_ar_afip_code
                     line += code.zfill(2)
 
                     # Campo 16 Número de documento del retenido len 20
@@ -268,7 +276,7 @@ class AccountExportSicore(models.Model):
                     line += cuit.zfill(20)
 
                     # Campo 17 Número certificado original len 14
-                    number = '0'
+                    number = payment.withholding_number
                     line += number.zfill(14)
 
                     data.append(line)
