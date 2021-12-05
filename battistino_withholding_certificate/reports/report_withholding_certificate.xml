@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_withholding_certificate_document"
+              inherit_id="l10n_ar_account_withholding.report_withholding_certificate_document">
+        <xpath expr="//div[@name='footer_left_column']" position="replace">
+            <div name="footer_left_column" class="col-8" height="400px">
+                Nombre y Apellido Firmante: <strong>Agustin Battistino</strong>
+                <br/>Cargo: <strong>Presidente</strong>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@name='footer_right_column']" position="replace">
+            <div name="footer_right_column" class="col-4" height="400px" style="position:absolute; top:-40px">
+                <div style="position:absolute; top:40px">Firma Responsable:</div>
+                <div>
+                    <img width="100px" height="150px"
+                    src="/battistino_withholding_certificate/static/description/sign.png"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
