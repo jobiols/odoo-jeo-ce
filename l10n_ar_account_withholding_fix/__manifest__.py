@@ -14,8 +14,10 @@
     "installable": True,
     "depends": [
         'l10n_ar_account_withholding',
+        'account',
     ],
     "data": [
         'reports/report_withholding_certificate.xml',
+        'views/res_config_settings_views.xml'
     ],
 }

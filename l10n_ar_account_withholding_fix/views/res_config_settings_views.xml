@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- res.config.settings inherit form view -->
+<record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">L10N AR WITHHOLDING FIX</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+        <!-- Add your xpath here -->
+
+    </field>
+</record>
+</odoo>
