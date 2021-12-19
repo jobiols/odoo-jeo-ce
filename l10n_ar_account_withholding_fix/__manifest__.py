@@ -1,8 +1,8 @@
 # Copyright 2021 jeo Software
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
-    "name": "Battistino Withholdings Certificate",
-    "summary": "Certificado de retenciones con la firma de Battistino",
+    "name": "l10n ar withholding fix",
+    "summary": "Este modulo queda depreciado porque la funcionalidad ya esta incluida en l10n_ar_ux",
     "version": "13.0.1.0.0",
     "development_status": "Alpha", # "Alpha|Beta|Production/Stable|Mature"
     "category": "Accounting",
