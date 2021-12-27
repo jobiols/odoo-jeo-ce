@@ -208,7 +208,7 @@ class AccountExportArba(models.Model):
                 for payment in payments:
 
                     # Campo 01 -- Cuit contribuyente retenido
-                    cuit = payment.payment_group_id.partner_id.main_id_number
+                    cuit = payment.payment_group_id.partner_id.vat
                     cuit = '%s-%s-%s' % (cuit[0:2], cuit[2:10], cuit[10:])
                     line = cuit
 
