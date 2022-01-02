@@ -181,6 +181,7 @@ class AccountExportSicore(models.Model):
         return ret
 
     def compute_sicore_data(self):
+
         line = ''
         for rec in self:
             if rec.doc_type == WITHHOLDING:
@@ -216,6 +217,14 @@ class AccountExportSicore(models.Model):
                     line += amount.zfill(16)
 
                     # Campo 05 Código de impuesto len 4
+                    if not payment.tax_withholding_id:
+                        raise UserError(
+                            _('El elemento de pago %s que corresponde al grupo de '
+                              'pagos %s no tiene retención asociada.\n'
+                              'Sin embargo pertenece al diario %s el cual tiene tildada'
+                              ' la opción retenciones.') %
+                                (payment.name, payment.payment_group_id.name,
+                                 payment.journal_id.name))
                     code = payment.tax_withholding_id.sicore_tax_code
                     if not code:
                         raise UserError(

@@ -36,18 +36,11 @@ class PercepWithholdWizardReport(models.TransientModel):
         account_move_ids = self.env['account.move'].search(domain)
         return account_move_ids
 
-
-
-
-
     def do_report(self):
         """ Imprimir el reporte, en planilla excel
         """
         headers = ['Cuit Retenido','Nombre Retenido','Impuesto','Monto retenido',
                    'Nro Factura', 'Nro Comprobante', 'Fecha Emisión']
-
-        import wdb;wdb.set_trace()
-
 
         sheet_lines = list()
         # obtener los datos y ponerlos en una estructura

@@ -19,10 +19,6 @@ class AccountPayment(models.Model):
         headers = ['Cuit Retenido','Nombre Retenido','Impuesto','Monto retenido',
                    'Nro Factura', 'Nro Comprobante', 'Fecha Emisión']
 
-
-        import wdb;wdb.set_trace()
-
-
         sheet_lines = list()
         # obtener los datos y ponerlos en una estructura
         for payment in self:
