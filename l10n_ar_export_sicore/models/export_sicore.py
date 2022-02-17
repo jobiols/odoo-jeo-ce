@@ -210,7 +210,7 @@ class AccountExportSicore(models.Model):
 
                     # Campo 03 -- Numero comprobante len 16
                     _comprobante = invoice.l10n_latam_document_number.replace('-','')
-                    line += _comprobante + '   '
+                    line += _comprobante.ljust(16)
 
                     # Campo 04 -- Importe del comprobante len 16
                     amount = '{:.2f}'.format(invoice.amount_total)
@@ -230,7 +230,7 @@ class AccountExportSicore(models.Model):
                         raise UserError(
                             _('El impuesto %s no tiene cargado el codigo de impuesto.') %
                                 (payment.tax_withholding_id.name))
-                    line += amount.zfill(4)
+                    line += str(code).zfill(4)
 
                     # Campo 06 Código de régimen len 3
                     if not payment.payment_group_id.regimen_ganancias_id:
