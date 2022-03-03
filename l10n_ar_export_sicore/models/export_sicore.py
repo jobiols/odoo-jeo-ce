@@ -1,5 +1,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+from warnings import _catch_warnings_with_records
 from odoo import api, fields, models, _
 from odoo.tools import date_utils
 from datetime import date, timedelta, datetime
@@ -181,6 +182,9 @@ class AccountExportSicore(models.Model):
         return ret
 
     def compute_sicore_data(self):
+        """ Sicore permite puntos o comas en el archivo
+            Se puede hacer padding con espacios o con ceros
+        """
 
         line = ''
         for rec in self:
@@ -209,12 +213,12 @@ class AccountExportSicore(models.Model):
                     line += _date
 
                     # Campo 03 -- Numero comprobante len 16
-                    _comprobante = invoice.l10n_latam_document_number.replace('-','')
+                    _comprobante = invoice.l10n_latam_document_number.replace('-','')[1:]
                     line += _comprobante.ljust(16)
 
-                    # Campo 04 -- Importe del comprobante len 16
+                    # Campo 04 -- Importe del comprobante len 17
                     amount = '{:.2f}'.format(invoice.amount_total)
-                    line += amount.zfill(16)
+                    line += amount.zfill(17)
 
                     # Campo 05 Código de impuesto len 4
                     if not payment.tax_withholding_id:
