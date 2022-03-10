@@ -19,4 +19,5 @@
         }
     ],
     "restructuredtext.languageServer.disabled": true,
+    "esbonio.server.enabled": false,
 }

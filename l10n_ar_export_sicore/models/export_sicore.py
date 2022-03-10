@@ -1,6 +1,5 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-from warnings import _catch_warnings_with_records
 from odoo import api, fields, models, _
 from odoo.tools import date_utils
 from datetime import date, timedelta, datetime
